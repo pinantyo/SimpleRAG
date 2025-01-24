@@ -25,7 +25,7 @@ class ChatBot:
                     "content": query,
                 }
             ],
-            model="llama-3.3-70b-versatile",
+            model=config("MODEL"),
         )
 
         return chat_completion.choices[0].message.content
