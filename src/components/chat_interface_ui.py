@@ -17,8 +17,13 @@ def chat_actions(role:str="user", text:str=None):
     if role == "user":
         st.session_state["chat_history"][params["uuid"]].append({"role": "user", "content": st.session_state["chat_input"]})
     else:
+        text = st.session_state["chatbot"].interact(text)
         st.session_state["chat_history"][params["uuid"]].append({"role": "assistant", "content": text})
 
+
+
+
+init_state()
 with st.container():
     params = st.query_params
 

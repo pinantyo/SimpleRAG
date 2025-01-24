@@ -1,7 +1,12 @@
 import streamlit as st
 from uuid import uuid4
 
+from components.chatbox import ChatBot
+
 def init_state():
+    if "chatbot" not in st.session_state:
+        st.session_state["chatbot"] = ChatBot()
+
     if "chat_history" not in st.session_state:
         st.session_state["chat_history"] = {}
 

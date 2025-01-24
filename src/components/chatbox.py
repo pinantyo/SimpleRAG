@@ -4,11 +4,12 @@ from groq import Groq
 
 
 class ChatBot:
-    def __init__(self, ):
+    def __init__(self, max_length: int = 128):
         self.client = Groq(
             # This is the default and can be omitted
             api_key=config("GROQ_API"),
         )
+        self.max_length = max_length
 
     def text_similarity(self, query, context):
         pass
