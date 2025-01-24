@@ -10,17 +10,18 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 def chat_actions(role:str="user", text:str=None):
-    if role == "user":
-        st.session_state["chat_history"].append(
-            {"id":st.session_state["identifier"], "role": "user", "content": st.session_state["chat_input"]},
-        )
-    else:
-        st.session_state["chat_history"].append(
-            {"id":st.session_state["identifier"], "role": "assistant", "content": text},
-        )
+    params = st.query_params
+    if st.session_state["identifier"] not in st.session_state["chat_history"]:
+        st.session_state["chat_history"][st.session_state["identifier"]] = []
 
-init_state()
+    if role == "user":
+        st.session_state["chat_history"][params["uuid"]].append({"role": "user", "content": st.session_state["chat_input"]})
+    else:
+        st.session_state["chat_history"][params["uuid"]].append({"role": "assistant", "content": text})
+
 with st.container():
+    params = st.query_params
+
     messages = st.container(height=700, border=False)
     if prompt := st.chat_input(
         placeholder = "Your message",
@@ -35,5 +36,6 @@ with st.container():
         )
 
     if st.session_state["chat_history"]:
-        for i in st.session_state["chat_history"]:
-            messages.chat_message(i["role"]).write(f'{i["id"]} - {i["content"]}')
+        if st.session_state["chat_history"][params["uuid"]]:
+            for i in st.session_state["chat_history"][params["uuid"]]:
+                messages.chat_message(i["role"]).write(f'{i["content"]}')
