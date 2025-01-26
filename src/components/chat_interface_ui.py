@@ -9,7 +9,10 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-def chat_actions(role:str="user", text:str=None):
+
+init_state()
+
+def chat_actions(role:str="user"):
     params = st.query_params
     if st.session_state["identifier"] not in st.session_state["chat_history"]:
         st.session_state["chat_history"][st.session_state["identifier"]] = []
@@ -17,13 +20,10 @@ def chat_actions(role:str="user", text:str=None):
     if role == "user":
         st.session_state["chat_history"][params["uuid"]].append({"role": "user", "content": st.session_state["chat_input"]})
     else:
-        text = st.session_state["chatbot"].interact(text)
-        st.session_state["chat_history"][params["uuid"]].append({"role": "assistant", "content": text})
+        text = st.session_state["chatbot"].interact(text)['result']
+        st.session_state["chat_history"][params["uuid"]].append({"role": "assistant", "content": str(text)})
 
 
-
-
-init_state()
 with st.container():
     params = st.query_params
 
@@ -36,8 +36,7 @@ with st.container():
         key = "chat_input"
     ):
         chat_actions(
-            role="assistant",
-            text="Assistant's answer"
+            role="assistant"
         )
 
     if st.session_state["chat_history"]:
