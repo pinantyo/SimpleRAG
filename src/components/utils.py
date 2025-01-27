@@ -18,7 +18,7 @@ def init_state():
         st.session_state["identifier"] = None
 
     if "pages" not in st.session_state:
-        st.session_state["pages"] = [] # st.Page("components/chat_interface_ui.py", title="chat1")
+        st.session_state["pages"] = []
 
 
 def new_state():

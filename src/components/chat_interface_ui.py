@@ -1,5 +1,6 @@
 import streamlit as st
 from components.utils import init_state
+import time
 
 st.markdown("""
     <style>
@@ -10,19 +11,25 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 
+if "loading" not in st.session_state:
+    st.session_state["loading"] = False
+
 init_state()
 
-def chat_actions(role:str="user"):
+def change_state():
+    st.session_state["loading"] = True
+
+def chat_actions(role:str, prompt:str):
     params = st.query_params
     if st.session_state["identifier"] not in st.session_state["chat_history"]:
         st.session_state["chat_history"][st.session_state["identifier"]] = []
 
-    if role == "user":
-        st.session_state["chat_history"][params["uuid"]].append({"role": "user", "content": st.session_state["chat_input"]})
-    else:
-        text = st.session_state["chatbot"].interact(text)['result']
-        st.session_state["chat_history"][params["uuid"]].append({"role": "assistant", "content": str(text)})
-
+    # Save user
+    st.session_state["chat_history"][params["uuid"]].append({"role": "user", "content": prompt})
+    
+    # Init bot response
+    text = st.session_state["chatbot"].interact(prompt)['result']
+    st.session_state["chat_history"][params["uuid"]].append({"role": "assistant", "content": str(text)})
 
 with st.container():
     params = st.query_params
@@ -31,13 +38,18 @@ with st.container():
     if prompt := st.chat_input(
         placeholder = "Your message",
         max_chars = None,
-        disabled = False,
-        on_submit = chat_actions,
-        key = "chat_input"
+        disabled = st.session_state["loading"],
+        on_submit = change_state
     ):
-        chat_actions(
-            role="assistant"
-        )
+        with st.spinner('Processing...'):
+            chat_actions(
+                role="assistant",
+                prompt=prompt
+            )
+
+        # Change State
+        st.session_state["loading"] = False
+        st.rerun()
 
     if st.session_state["chat_history"]:
         if st.session_state["chat_history"][params["uuid"]]:

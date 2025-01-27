@@ -84,4 +84,3 @@ class RAGCreation:
     
     def interact(self, query):
         return self.rag.invoke(query)
-
