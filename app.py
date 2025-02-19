@@ -1,18 +1,5 @@
 import streamlit as st
-from components.utils import init_state, new_state
-
-# Widgets shared by all the pages
-def add_new_chat():
-    new_state()
-
-    st.session_state["pages"].append(
-        st.Page(
-            "components/chat_interface_ui.py", 
-            title="chat1",
-            url_path=f"/?uuid={st.session_state["identifier"]}"
-        )
-    )
-
+from components.utils import init_state, add_new_chat
 
 
 init_state()

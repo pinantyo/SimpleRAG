@@ -5,7 +5,7 @@ from groq import Groq
 from langchain_groq import ChatGroq
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_community.vectorstores import FAISS
-from langchain_community.document_loaders import TextLoader, PyPDFLoader
+from langchain_community.document_loaders import PyPDFLoader
 # from langchain_core.vectorstores import InMemoryVectorStore
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.chains import RetrievalQA
@@ -24,34 +24,6 @@ class Dictionary:
         else:
             raise AttributeError(f"'Dictionary' object has no attribute '{name}'")
     
-
-class ChatBot:
-    def __init__(self, max_length: int = 128):
-        self.client = Groq(
-            # This is the default and can be omitted
-            api_key=config("GROQ_API"),
-        )
-        self.max_length = max_length
-
-    def text_similarity(self, query, context):
-        pass
-    
-    def interact(self, query):
-        chat_completion = self.client.chat.completions.create(
-            messages=[
-                {
-                    "role": "system",
-                    "content": "you are a helpful assistant."
-                },{
-                    "role": "user",
-                    "content": query,
-                }
-            ],
-            model=config("MODEL"),
-        )
-
-        return chat_completion.choices[0].message.content
-
 class RAGCreation:
     def __init__(self, chunk_size=1000, chunk_overlap=200):
         self.client = HuggingFaceEmbeddings(model_name=config("EMBEDDING"))
