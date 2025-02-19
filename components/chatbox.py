@@ -9,7 +9,6 @@ from langchain_community.document_loaders import PyPDFLoader
 # from langchain_core.vectorstores import InMemoryVectorStore
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.chains import RetrievalQA
-from data.ops import ContextDB
 
 os.environ["GROQ_API_KEY"] = config("GROQ_API")
 
